@@ -1,9 +1,6 @@
 var map;
 var markers = [];
 var infoWindows = [];
-var arr = []
-var min_dataset_arr = [];
-var max_dataset_arr = [];
 
 function initialize() {
   var usa = new google.maps.LatLng(37.09024, -95.712891);
@@ -15,7 +12,7 @@ function initialize() {
   };
 
   map = new google.maps.Map(document.getElementById('map-canvas'),
-      mapOptions);
+    mapOptions);
 
   getBeers();
 }
@@ -73,12 +70,11 @@ function getBeers(abv) {
           }
 
           var infoWindowContent = '<div style="min-width: 200px; min-height: 300px;">' +
-              '<h3>' + beer.name + '</h3>' +
-              '<p><img src="' + label + '"></p>' +
-              '<p>ABV: ' + beer.abv + '%</p>' +
-              '<p>' + beer.description + '</p>' +
-            '</div>';
-
+          '<h3>' + beer.name + '</h3>' +
+          '<p><img src="' + label + '"></p>' +
+          '<p>ABV: ' + beer.abv + '%</p>' +
+          '<p>' + beer.description + '</p>' +
+          '</div>';
           addMarker(marker, infoWindowContent);
         });
       });
@@ -106,14 +102,11 @@ $('#buttons').on('click', 'button', function(event) {
   getBeers(abv);
 });
 
-
-
 function sliderEvent(event) {
   var abv = rangevalue.value;
 
   getBeers(abv);
 };
-
 
 $("#abvslider").change(function(event) {
   sliderEvent(event);
@@ -126,78 +119,3 @@ function deleteMarkers() {
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
-
-    var chartdata = [{
-        value: 30,
-        color: "#F7464A"
-    }, {
-        value: 50,
-        color: "#E2EAE9"
-    }, {
-        value: 100,
-        color: "#D4CCC5"
-    }, {
-        value: 40,
-        color: "#949FB1"
-    }, {
-        value: 120,
-        color: "#4D5360"
-    }
-
-    ]
-
-    var options = {
-        animation: true
-    };
-
-    //Get the context of the canvas element we want to select
-    var c = $('#myChart');
-    var ct = c.get(0).getContext('2d');
-    var ctx = document.getElementById("myChart").getContext("2d");
-    var ctv = document.getElementById("mySecondChart").getContext("2d");
-    /*************************************************************************/
-    // myNewChart = new Chart(ct).Doughnut(chartdata, options);
-
-
-var arr = [];
-var min_dataset_arr = [];
-var max_dataset_arr = [];
-
-  for (var i = 0; i < data["data"].length; i++) {
-    for (var q = 0; q < 5; q++) {
-      try {
-        arr.push(data["data"][i]["breweries"][0]["name"]);
-        min_dataset_arr.push(data["data"][i]["style"]["abvMin"]);
-        max_dataset_arr.push(data["data"][i]["style"]["abvMax"]);
-      }
-      catch(err) {
-        console.log("Not all locations were properly discovered.")
-      }
-  }}
-  arr = arr.filter(function(elem, pos) {
-    return arr.indexOf(elem) == pos;
-  })
-    min_dataset_arr = min_dataset_arr.filter(function(elem, pos) {
-    return min_dataset_arr.indexOf(elem) == pos;
-  })
-  max_dataset_arr = max_dataset_arr.filter(function(elem, pos) {
-    return max_dataset_arr.indexOf(elem) == pos;
-  })
-      debugger;
-
-    var chartdata2 = {
-  labels : arr,
-  datasets : [
-    {
-      fillColor : "rgba(220,220,220,0.5)",
-      strokeColor : "rgba(220,220,220,1)",
-      data : min_dataset_arr
-    },
-    {
-      fillColor : "rgba(151,187,205,0.5)",
-      strokeColor : "rgba(151,187,205,1)",
-      data : max_dataset_arr
-    }
-  ]
-}
-    barchart = new Chart(ctv).Bar(chartdata2,options);
