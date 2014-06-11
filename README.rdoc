@@ -1,3 +1,1 @@
-Sinatra Setup is a major time-saver. Simple pull the repository down, bundle install, and you have a live application. It allows a user to easily make changes, but saves him/her the initial setup time and effort, which can often take fifteen minutes, if you haven't used Sinatra in a while.
-
-All that the application contains is server.rb, index view page (complete with a title and a basic navigation bar, jQuery library, (very) minimally styled css file, empty javascript (for all of your wild front-end modifications), a font that I think is cool (which can easily be altered), a Gemfile (with shotgun, sinatra, and pry gems).
+This application allows a user to dynamically search for breweries that are brewing a particular abv of beer. The application utilizes the Google Maps API v3 and the BreweryDB API.

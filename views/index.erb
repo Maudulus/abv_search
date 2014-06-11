@@ -1,23 +1,315 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <script type="text/javascript" src="/javascripts/jquery.js"></script>
-    <script type="text/javascript" src="/javascripts/myjavascript.js"></script>
-    <link rel="stylesheet" href="/stylesheets/css.css" type="text/css" />
-    <title>TITLE</title>
-  </head>
-    <body >
-      <h1>TITLE</h1>
-        <div class="row">
-          <nav class="top-bar" data-topbar>
-              <ul>
-                <li><a href="/a">link a</a></li>
-                <li><a href="/b">link b</a></li>
-                <li><a href="/c">link c</a></li>
-                <li><a href="/d">link d</a></li>
-                <li><a href="/e">link e</a></li>
-              </ul>
-          </nav>
-        </div>
-    </body>
+<head>
+  <script type="text/javascript"src="https://maps.googleapis.com/maps/api/js?key=#{ENV['API_KEY']}"></script>
+  <script type="text/javascript" src="/javascripts/jquery.js"></script>
+  <script src="/javascripts/Chart.js"></script>
+  <link rel="stylesheet" href="/stylesheets/css.css" type="text/css" />
+  <script type="text/javascript" src="/javascripts/beermapjson.js"></script>
+<script type="text/javascript" src="/javascripts/beermapjson18percent.js"></script>
+<script type="text/javascript" src="/javascripts/beermapjson16percent.js"></script>
+  <title>Sort by abv.</title>
+</head>
+<body >
+  <h1>Sort by abv.</h1>
+  <div class="row">
+    <nav class="top-bar" data-topbar>
+      <ul>
+        <li><a href="/chart">chart</a></li>
+        <li><a href="/b">link b</a></li>
+        <li><a href="/c">link c</a></li>
+        <li><a href="/d">link d</a></li>
+        <li><a href="/e">link e</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <div id="buttons" style="text-align: center;">
+    <button class="btn1" data-abv="20">20%</button>
+    <button class="btn1" data-abv="18">18%</button>
+    <div class="container">
+      <div class="slider">
+        <input id="abvslider" type ="range" min="0" max="50" onchange="rangevalue.value=value;"/>
+        <output id="rangevalue">25</output>
+        <button class="btn1" data-abv="rangevalue" style="display: none;"></button>
+      </div>
+    </div>
+    <button class="btn1" data-abv="12">12%</button>
+    <button class="btn1" data-abv="10">10%</button>
+  </div>
+
+  <div id="map-canvas"></div>
+
+  <canvas id="myChart" width="400" height="400"></canvas>
+
+  <script type="text/javascript">
+//    dataholder = data
+//     console.log(data)
+//     function myFunction1() {
+//       clearMarkers();
+//       // address_setter;
+//       // initialize;
+//       // addMarkerToMap;
+//       // setAllMap;
+//       data = dataholder;
+//       window.data = data;
+//       // initialize();
+//       address_set();
+//       showMarkers();
+//       console.log(data);
+//       // google.maps.event.trigger(map, 'resize');
+//     }
+//     function myFunction2() {
+//       clearMarkers();
+//       data = dataholder
+//       window.data = data2;
+//       address_set();
+//       showMarkers();
+
+//       console.log(data);
+//       google.maps.event.trigger(map, 'resize');
+//     }
+//     function myFunction3() {
+//       clearMarkers();
+//       data = dataholder
+//       window.data = data3;
+//       address_set();
+//       showMarkers();
+
+//       console.log(data);
+//       google.maps.event.trigger(map, 'resize');
+//     }
+
+//           // console.log(data["data"][0]["breweries"][0]["locations"][0]["latitude"], data["data"][0]["breweries"][0]["locations"][0]["longitude"]);
+
+//           // for (var i = 0; i < 3; i++) {
+//           //   for (var q = 0; i < 3; i++) {console.log(data["data"][i]["breweries"][q]["locations"][q]["streetAddress"] + ", " + data["data"][i]["breweries"][q]["locations"][q]["locality"] + " " + data["data"][i]["breweries"][q]["locations"][q]["region"]);
+//           // }}
+
+
+//           var map;
+//           var bounds;
+//           var geocoder;
+//           var center;
+//           var marker;
+//           var markers = [];
+
+//           // function address_setter (contentString) {
+//           //   for (var i = 0; i < data["data"].length; i++) {
+//           //     for (var q = 0; q < 5; q++) {
+//           //       try{
+//           //         var address = data["data"][i]["breweries"][0]["locations"][0]["streetAddress"] + " " + data["data"][i]["breweries"][0]["locations"][0]["locality"] + " " + data["data"][i]["breweries"][0]["locations"][0]["region"];
+//           //       // var cgontentString = '<div id="content">'+ address + '</div>';
+//           //       // var contentString = '<div id="content">'+ $(this).attr("address") + '</div>';
+//           //     } catch(err) {
+//           //       console.log("Not all locations were properly discovered.")
+//           //     }
+//           //   }}
+//           // }
+
+//             function initialize() {
+//               var mapOptions = {
+//                 center: new google.maps.LatLng(39.828127, -98.579404),
+//                 zoom: 3,
+//                 mapTypeId: google.maps.MapTypeId.ROADMAP
+//               };
+//               map = new google.maps.Map(document.getElementById("map"),
+//                 mapOptions);
+//               geocoder = new google.maps.Geocoder();
+//               bounds = new google.maps.LatLngBounds();
+//             }
+//             function addMarkerToMap(location){
+//               var marker = new google.maps.Marker({map: map, position: location});
+//               bounds.extend(location);
+//               map.fitBounds(bounds);
+//               markers.push(marker);
+//               showMarkers();
+
+//               google.maps.event.addListener(marker, 'click', function() {
+//                 map.setZoom(4);
+//                 map.setCenter(marker.getPosition());
+//               });
+
+//               var infowindow = new google.maps.InfoWindow({
+//                 // content: contentString,
+//                 maxWidth: 150,
+//                 maxHeight: 150
+//               });
+//               google.maps.event.addListener(marker, 'click', function() {
+//                 infowindow.open(map,marker);
+//               });
+//             }
+
+
+
+// // document.querySelector('#firstHeading').innerHTML = 'Hello World!';
+
+// initialize();
+// address_set();
+
+//           // $(data["data"]).each(function(){
+//           //   // for (var i = 0; i < 3; i++) {
+//           //   for (var q = 0; i < 3; i++) {
+//           //     console.log(data["data"][i]["breweries"][q]["locations"][q]["streetAddress"] + ", " + data["data"][i]["breweries"][q]["locations"][q]["locality"] + " " + data["data"][i]["breweries"][q]["locations"][q]["region"]);
+//             // var $address = $(this);
+//             // geocoder.geocode({address: $address.text()}, function(results, status){
+//             //   if(status == google.maps.GeocoderStatus.OK) addMarkerToMap(results[0].geometry.location);
+//             // });
+//           // $("address").each(function(){
+//           //   var $address = $(this);
+//           //   geocoder.geocode({address: $address.text()}, function(results, status){
+//           //     if(status == google.maps.GeocoderStatus.OK) addMarkerToMap(results[0].geometry.location);
+//           //   });
+//           // });
+// function address_set() {
+//   for (var i = 0; i < data["data"].length; i++) {
+//     for (var q = 0; q < 5; q++) {
+//     try{
+//       var address = data["data"][i]["breweries"][0]["locations"][0]["streetAddress"] + " " + data["data"][i]["breweries"][0]["locations"][0]["locality"] + " " + data["data"][i]["breweries"][0]["locations"][0]["region"];
+//     }
+//     catch(err) {
+//       console.log("Not all locations were properly discovered.")
+//     }
+//     geocoder.geocode({address: address}, function(results, status){
+//       if(status == google.maps.GeocoderStatus.OK) addMarkerToMap(results[0].geometry.location);
+//     });
+//   }}
+// }
+
+
+// // for (var i = 0; i < data["data"].length; i++) {
+// //             for (var q = 0; q < 5; q++) {
+
+// //                 var address = data["data"][i]["breweries"][q]["locations"][q]["streetAddress"] + ", " + data["data"][i]["breweries"][q]["locations"][q]["locality"] + " " + data["data"][i]["breweries"][q]["locations"][q]["region"];
+// //                 console.log(address)
+// //           }}
+
+//         // $(data["data"]).each(function(){
+//         //   for (var i = 0; i < 3; i++) {
+//         //     for (var q = 0; i < 3; i++) {console.log(data["data"][i]["breweries"][q]["locations"][q]["streetAddress"] + ", " + data["data"][i]["breweries"][q]["locations"][q]["locality"] + " " + data["data"][i]["breweries"][q]["locations"][q]["region"]);
+//         //       var $address = $(data["data"][i]["breweries"][q]["locations"][q]["streetAddress"] + ", " + data["data"][i]["breweries"][q]["locations"][q]["locality"] + " " + data["data"][i]["breweries"][q]["locations"][q]["region"]);
+//         //     geocoder.geocode({address: $address.text()}, function(results, status){
+//         //       if(status == google.maps.GeocoderStatus.OK) addMarkerToMap(results[0].geometry.location);
+//         //     });
+//         //   }}
+//         //   });
+
+// google.maps.event.addDomListener(map, "idle", function(){
+//   center = map.getCenter();
+// });
+
+// $(window).resize(function(){
+//   map.setCenter(center);
+// });
+
+//             function setAllMap(map) {
+//               for (var i = 0; i < markers.length; i++) {
+//                 markers[i].setMap(map);
+//               }
+//             }
+
+//             function clearMarkers() {
+//               setAllMap(null);
+//             }
+
+//             function showMarkers() {
+//               setAllMap(map);
+//             }
+
+
+
+
+//           // $.getJSON("http://api.brewerydb.com/v2/beers?abv=4\.4&key=fb45fdb262930c710dad7b133da02245", function (e) {
+//           //     alert("e.data");
+//           //   });
+
+
+// </script>
+
+
+<canvas id="mySecondChart" width="400" height="400"></canvas>
+
+
+
+<script type="text/javascript" src="/javascripts/myjavascript.js"></script>
+
+
+
+<!-- Chart Stuff -->
+
+  <script type="text/javascript">
+
+
+//     // var chartdata = [
+
+//     // ]
+
+//     var options = {
+//         animation: true
+//     };
+
+//     //Get the context of the canvas element we want to select
+//     // var c = $('#myChart');
+//     // var ct = c.get(0).getContext('2d');
+//     // var ctx = document.getElementById("myChart").getContext("2d");
+//     var ctv = document.getElementById("mySecondChart").getContext("2d");
+//     /*************************************************************************/
+//     // myNewChart = new Chart(ct).Doughnut(chartdata, options);
+
+
+// var arr = [];
+// var min_dataset_arr = [];
+// var max_dataset_arr = [];
+// // append new value to the array
+//   for (var i = 0; i < data["data"].length; i++) {
+//     for (var q = 0; q < 5; q++) {
+//       try {
+//         arr.push(data["data"][i]["breweries"][0]["name"]);
+//         min_dataset_arr.push(data["data"][i]["style"]["abvMin"]);
+//         max_dataset_arr.push(data["data"][i]["style"]["abvMax"]);
+//       }
+//       catch(err) {
+//         console.log("Not all locations were properly discovered.")
+//       }
+//   }}
+//   arr = arr.filter(function(elem, pos) {
+//     return arr.indexOf(elem) == pos;
+//   })
+//     min_dataset_arr = min_dataset_arr.filter(function(elem, pos) {
+//     return min_dataset_arr.indexOf(elem) == pos;
+//   })
+//   max_dataset_arr = max_dataset_arr.filter(function(elem, pos) {
+//     return max_dataset_arr.indexOf(elem) == pos;
+//   })
+
+//     var chartdata2 = {
+//   labels : arr,
+//   datasets : [
+//     {
+//       fillColor : "rgba(220,220,220,0.5)",
+//       strokeColor : "rgba(220,220,220,1)",
+//       data : min_dataset_arr
+//     },
+//     {
+//       fillColor : "rgba(151,187,205,0.5)",
+//       strokeColor : "rgba(151,187,205,1)",
+//       data : max_dataset_arr
+//     }
+//   ]
+// }
+//     barchart = new Chart(ctv).Bar(chartdata2,options);
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+
 </html>
